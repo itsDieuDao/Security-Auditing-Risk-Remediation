@@ -20,24 +20,40 @@
 📄 Download the **CIS Controls v8** [HERE](https://www.cisecurity.org/controls/v8-1) <br/>  
 
   
-<h2>🛠 Step 2: Set Up Your Home Lab </h2>
-   
-<h3>🔹 Install a Windows Server & Linux VM </h3>  
-We'll map compliance requirements to actual security settings in a controlled environment.<br/>   
-  <br/>  
+<h2>🛠 Step 2: Conduct a Security Audit </h2>  
 
-   🔧 Tools & Setup:
-   - <b>Windows Server 2022 (or 2019) VM</b> - For Group Policy, logging, and access control </b>
-   - <b>Ubuntu/Debian VM</b> - For security configuration and compliance scanning </b>
-   - <b>pfSense VM (Optional)<b/> - If you want to add firewall policies
+An audit assesses **security controls** and finds **gaps** We'll review:  
+✅ **Access Controls** (Who has access to what?)  
+✅ **Logging & Monitoring** (Are events properly logged?)  
+✅ **Vulnerability Management** (Are systems patched and updated?)  
+✅ **Network Security** (Are firewalls & segmentation in place?)  
+
+  
+<h2>🔹 Step 2.1: Perform an Audit in Your Home Lab </h2>  
+🔧 Windows Server: Check Security Settings    
+  <br/>   
  
-📌 Install Virtual Machines (VMs)
-1. Download and install VMware Worrkstation / VirtualBox
-2. Set up Windows Server 2022 and Ubuntu 22.04 VMs
-3. Configure a domain controller (Active Directory) on Windows Server <br/>
+📌 List **User Accounts & Privileges**
 
+    Get-LocalUser | Select Name, Enabled  
+    
+- Identify inactive accounts that should be removed.
 
-<h2>🛠 Step 3: Map NIST CSF Controls to Your Lab Environment</h2>
+📌 Check **Group Policies Applied**  
+
+    gpresult /h C:\AuditReport.html  
+  
+- Review **password policies, firewall settings, and remote access rules.**
+
+📌 Check **Event Logs for Security Issues**  
+
+    Get-EventLog -LogName Security -Newest 10  
+    
+- Look for **failed login attempts** or suspicious activities.
+  
+  
+<h3>🛠 Linux: Perform a Security Audit </h3>  
+  
 NIST CSF has five core functions:
   
 1. Identify 🏷️ – Asset management, risk assessment
