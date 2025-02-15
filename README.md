@@ -2,21 +2,22 @@
 
  
 
-**Objective**: Understand how to map security controls to compliance frameworks (e.g., NIST CSF, ISO 27001, SOC 2) and test compliance in a home lab.
+**Objective**: Simulate an **IT security audit**, identify compliance gaps, and create a **remediation plan** to address risks in a home lab.
  <br/>
 
 
-<h2>🛠 Step 1: Choose a Compliance Framework</h2>
-You can start with NIST Cybersecurity Framework (CSF) since it's widely used and publicly available.<br/>   
+<h2>🛠 Step 1: Choose an Audit Framework </h2>  
   <br/>  
   
-🔹 Alternative Options :  
-  - <b>ISO 27001 (if you want international standards)</b> 
-   - <b>SOC 2 (if you're interested in auditing for service providers)</b>
-   - <b>PCI-DSS (for payment security compliance)</b>
+🔹 Select an **audit framework** that aligns with common industry regulations:  
+   - <b> **CIS Controls v8** - General security best practices </b>  
+   - <b> **NIST 800-53** - Government security standards </b>  
+   - <b> **SOC 2 Type II** - Security, Availability, and Confidentially compliance </b>  
+   - <b> **ISO 27001** - International security management standard </b>  
 
-👉 For this project, we'll use NIST CSF as our baseline framework. <br/>  
-📄 Download the NIST CSF document [HERE](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf) <br/>  
+  
+👉 For this project, we'll use **CIS Controls v8**, which is widely applicable across industries. <br/>  
+📄 Download the **CIS Controls v8** [HERE](https://www.cisecurity.org/controls/v8-1) <br/>  
 
   
 <h2>🛠 Step 2: Set Up Your Home Lab </h2>
