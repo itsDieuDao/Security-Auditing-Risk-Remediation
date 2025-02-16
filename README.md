@@ -54,84 +54,116 @@ An audit assesses **security controls** and finds **gaps** We'll review:
   
 <h3>🛠 Linux: Perform a Security Audit </h3>  
   
-NIST CSF has five core functions:
-  
-1. Identify 🏷️ – Asset management, risk assessment
-2. Protect 🔒 – Access control, endpoint security
-3. Detect 👀 – Logging, SIEM, monitoring
-4. Respond 🚨 – Incident response plans
-5. Recover 🔄 – Backup, disaster recovery
-  
-🔹 Example Mapping:  
-| NIST Function | Control Example | Implementation in Lab |
-| ------------- | --------------- | --------------------- |
-| Identify      | Asset Inventory | List devices on the network using `nmap` or `PowerShell` `Get-ADComputer` |
-| Protect       | Access Control  | Set up Active Directory user roles & GPO for password polices | 
-| Detect        | Security Logging | Install **Splunk** or **Wazuh** to collect logs from Windows/Linux |
-| Respond       | Incident Response | Simulate a **failed login attack** and analyze logs |
-| Recover       | Backup & Restore | Set up **Windows Backup & Linux snapshots** |  
+📌 Check **Active User Accounts**  
 
-✅ Goal: Implement at least one security control for each NIST function in your home lab.  
+    cat /etc/passwd | cut -d: -f1  
 
-<h2>🛠 Step 4: Implement Compliance Controls <br/>  
+- Identify **unused accounts** that should be disabled.
+
+📌 List **Open Ports (Identify Unneccessary Services)**  
+
+    netstat -tulnp  
+
+- Close **uneeded ports** to reduce attack surface.
+  
+📌 Check **unneeded ports** to reduce attack surface.  
+
+    sudo apt update && sudo apt list --upgradable  
+
+- Patch any **outdated** software.
+
+📌 Scan **System for CIS Compliance Using Lynis**  
+
+    sudo apt install lynis -y
+    sudo lynis audit system  
+
+- Review **security hardening recommendations.**
+  
+
+  <h2>🛠 🔹 Step 2.2: Identify Security Gaps <br/>  
    
-🔹 Windows Server Hardening (Protect & Detect) </h2>  
+ After running audits, document security gaps.
   
-  🔧 Tasks:  
-  1. Enable Password Policies
-      - Open **Group Policy Editor (gpedit.msc)**
-      - Navigate to `Computer Configuration > Windows Settings > Security Settings > Account Policies > Password Policy`
-      - Set **Minimum Password Length** = **12**
-      - Enable **Account Lockout Policy** (3 failed attempts)
-  2. **Enable Windows Logging (SIEM Integration)**
-      - Open **Local Security Policy (secpol.msc)**
-      - Go to `Audit Policy > Audit Logon Events` → Enable **Success & Failure**
-      - Install **Splunk** or **Wazuh** to collect logs
+  🔹 **Example Findings:**  
+  
+| Category | Issue Identified | Risk Level |
+| -------- | ---------------- | ---------- |
+| Access Control | Default administrator account active | High |
+| Logging & Monitoring | No log retention policy set | Medium | 
+| Patching | Linux kernel outdated | High |
+| Firewall | Open SSH port exposed to internet | Critical |  
+
+    
+ <h2>🛠 Step 3: Create a Remediation Plan </h2>  
+
+  Now that we've identified risks, lets **priortize** and **fix them.**  
+
+   🔹 **Example Remediation Actions:**  
+   
+| Risk | Remediation Action | Owner | Deadline |
+| ---- | ------------------ | ----- | -------- | 
+| Weak Admin Account | Disable default admin account | IT Admin | ASAP | 
+| No Log Retention Policy | Implement a 90-day log retention | Security Team | 1 Week | 
+| Outdated Software | Apply latest security patches | SysAdmin | 1 Week | 
+| Open SSH Port | Restrict SSH access to internal IPs | Network Team | ASAP | 
 
   
- <h2>🔹 Linux Hardening (Protect & Detect)</h2>  
+
+<h2>🛠 Step 4: Implement Fixes in Home Lab </h2>    
   
-  🔧 Tasks:  
-  1. **Run a Compliance Scan (NIST, CIS Benchmarks)**
+ <h3>🔹 Remediate Access Control Issues </h3>   
+
   
-         sudo apt install lynis -y
-         sudo lynis audit system  
-  - This will generate a **security report** based on NIST controls.
+  **Windows: Disable Default Administrator Account**  
   
-  2. **Set Up Basic Firewall Rules (UFW)**
-
-         sudo ufw enable
-         sudo ufw allow OpenSSH
-         sudo ufw allow 443/tcp
-         sudo ufw status verbose
-  - This ensures only secure traffic is allowed.  
-
-<h2>🛠 Step 5: Compliance Validation & Reporting  <br/>  
-     
-🔹 Generate a Compliance Report  </h2>  
+        Disable-LocalUser -Name "Administrator"  
+ 
+✅ **Prevents unauthorized access.**
   
- 1. **Windows: Check compliance settings**  
+ **Linux Restrict SSH Access**  
+
+      sudo nano /etc/ssh/sshd_config
+    # Add or modify:
+      PermitRootLogin no
+      AllowUsers your_user
+  </br>    
+    
+     sudo systemctl restart ssh  
   
-        Get-GPOReport -All -ReportType HTML -Path C:\GPO_Report.html
-    - This exports a **Group Policy** compliance report.
+
+✅ **Blocks SSH brute-force attacks.**  
+
   
-2. *Linux: Review Lynis Report**
+<h2>🔹 Configure Log Retention </h2>  
 
-       cat /var/log/lynis-report.dat
-    - Look for **security misconfigurations**
+**Windows: Enable Log Retention Policy**  
 
-3. **Analyze Security Logs with Splunk/Wazuh**
-    - If you set up **Splunk**, create a **dashboard** to track compliance events.
+  
+1. Open **Group Policy Editor (gpedit.msc)**
+2. Navigate to:
+   `Computer Configuration > Windows Settings > Security Settings > Event Log`
+3. Set **Max Log Size** = **100MB** & **Retention Period** = **90 Days**
 
-<h2>🛠 Step 6: Write a Compliance Summary Report</h2>  
+ **Linux: Set Log Retention to 90 Days**  
 
-🎯 Your Deliverable: A **1-Page Compliance Report** summarizing:  
+   Modify log rotation settings:  
 
-✅ Controls Implemented  
-✅ Findings from Compliance Tools  
-✅ Areas for Improvement  
-✅ Next Steps  
+    sudo nano /etc/logrotate.conf  
 
+  Add or modify:  
+
+    /var/log/auth.log {
+        rotate 12
+        weekly
+        compress
+        missingok
+    }  
+
+  ✅ **Ensures logs are kept for security investigations. **  
+
+
+  
+  
 <h3> 📄 Example Summary: </h3>  
 
 **Security Compliance Report - NIST CSF Implementation in Home Lab**  
