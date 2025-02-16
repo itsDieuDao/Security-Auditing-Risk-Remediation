@@ -164,34 +164,64 @@ An audit assesses **security controls** and finds **gaps** We'll review:
 
   
   
-<h3> 📄 Example Summary: </h3>  
+<h2> 🔹 Patch Vulnerabilites & Secure Firewall </h2>    
 
-**Security Compliance Report - NIST CSF Implementation in Home Lab**  
-**Date:** \[Your Date]  
-**Compliance Framework:** NIST Cybersecurity Framework (CSF) 
+ **Windows: Apply Updates**  
 
-<h3> 🔹 Summary of Controls Implemented </h3>  
+    Get-WindowsUpdate -Install -AcceptAll -AutoReboot  
 
-✅ Access Control (Windows & Linux GPOs) → PROTECT  
-✅ Security Logging Enabled (Splunk/Wazuh) → DETECT  
-✅ Firewall Rules (UFW, pfSense) → PROTECT  
-✅ Audit Logs Reviewed → DETECT & RESPOND  
+**Linux: Apply Updates & Restrict SSH to Internal IPs**  
 
-<h3> 🔹 Findings </h3>  
+    sudo apt update && sudo apt upgrade -y
+    sudo ufw allow from 192.168.1.0/24 to any port 22  
 
-📌 **Windows Server Compliance Scan**: Passed 8/10 controls (Weak password policy detected)  
-📌 **Linux Security Audit (Lynis)**: Hardening score 85/100 (Need SSH restriction improvement)  
-📌 **Splunk Logs**: Detected 3 failed login attempts (Possible brute force)  
+ ✅ **Prevents external SSH attacks.**  
+
+
+ <h2>🛠 Step 5: Verify & Report Compliance </h2>  
+
+ 🔹 **Re-Audit to Confirm Fixes**  
+ After implementing fixes, rerun security checks:  
+
+ - **Windows:**
+
+       Get-LocalUser | Select Name, Enabled
+     
+ - **Linux:**
+
+       sudo lynis audit system  
+
+ - **Firewall CHeck:**
+
+       sudo ufw status verbose  
+
+  <h2> 📝 Sample Audit Remediation Report </h2>  
   
-<h3> 🔹 Areas for Improvement </h3>  
+**IT Security Audit & Risk Remediation Report**  
+**Date:** \[2/14/2025]  
+**Framework:** CIS Controls v8  
 
-  - Enforce **MFA** for **Windows Login**  
-  - Implement **automatic remidiation scripts** for failed login detection
+<h3> 🔹 Summary of Audit Findings </h3>  
+
+| Category | Issue Found | Status | 
+| -------- | ----------- | ------ | 
+| Access Control | Default admin account active | ✅ Disabled | 
+| Logging & Monitoring | No log retention policy | ✅ Set to 90 days | 
+| Patching | Outdated Linux Kernel | ✅ Patched | 
+| Firewall | SSH exposed to the internet | ✅ Restricted to internal network | 
+
+<h3> 🔹 Remaining Risks </h3>
+
+ 📌 No **multi-factor authentication (MFA)** configured  
+ 📌 **SIEM integration** not yet implemented  
+
+  
 
 <h3> 🔹 Next Steps </h3>  
 
-   1. Set up **Automated Compliance Monitoring** (e.g., Wazuh SIEM rules)
-   2. Perform **Continuous Auditing** (Scheduled CIS Benchmark scans)
+   1. Implement **MFA for all admin accounts**
+   2. Deploy **SIEM (Wazuh, Splunk) for centralized log monitoring**
+   3. Automate compliance checks with **scripts & dashboards.**  
 
   
 
